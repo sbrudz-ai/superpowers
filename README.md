@@ -121,6 +121,12 @@ Fetch and follow instructions from https://raw.githubusercontent.com/obra/superp
 - **writing-skills** - Create new skills following best practices (includes testing methodology)
 - **using-superpowers** - Introduction to the skills system
 
+### Workflow Hooks
+
+Workflow hooks allow external skill packs to integrate into the superpowers workflow without modifying superpowers itself. Register skills to run at specific points in the workflow (design, planning, execution, review).
+
+**Detailed docs:** [hooks/workflow-hooks.md](hooks/workflow-hooks.md)
+
 ## Philosophy
 
 - **Test-Driven Development** - Write tests first, always
