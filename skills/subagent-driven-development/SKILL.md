@@ -147,6 +147,8 @@ digraph process {
 
 ## Example Workflow
 
+> **Note:** This example assumes the user has configured workflow hooks with skills from the `dev-ethos` skill pack. Your hooks file may configure different skills or none at all. The workflow invokes whatever skills are in your `workflow-hooks.yaml`.
+
 ```
 You: I'm using Subagent-Driven Development to execute this plan.
 
@@ -156,7 +158,7 @@ You: I'm using Subagent-Driven Development to execute this plan.
 
 [HOOK: before_execute]
 [Check ~/.claude/workflow-hooks.yaml - found before_execute hooks]
-[Invoke dev-ethos:project-quality-setup (mode: enforce)]
+[Invoke configured skill: project-quality-setup (mode: enforce)]
 [Project has linting, formatting, CI - criteria met, proceeding]
 
 Task 1: Hook installation script
@@ -180,7 +182,7 @@ Implementer: "Got it. Implementing now..."
 
 [HOOK: before_review]
 [Check hooks - found before_review hooks with mode: inject]
-[Read dev-ethos:functional-core-imperative-shell checklist]
+[Read configured skill checklist (e.g., functional-core-imperative-shell)]
 [Append to code-quality-reviewer-prompt.md]
 
 [Dispatch spec compliance reviewer]
@@ -193,9 +195,9 @@ Code reviewer: Strengths: Good test coverage, clean.
 
 [HOOK: after_task]
 [Check hooks - found after_task hooks]
-[Invoke dev-ethos:boy-scout-rule - apply refactoring checklist]
+[Invoke configured skill (e.g., boy-scout-rule) - apply refactoring checklist]
 [No refactoring needed, code is clean]
-[Check if_ui_changed condition - no UI files in diff, skip visual-feedback-loop]
+[Check if_ui_changed condition - no UI files in diff, skip UI verification skill]
 
 [Mark Task 1 complete]
 
@@ -209,15 +211,15 @@ Task 2: Dashboard component
 [Implementation complete]
 
 [HOOK: before_review]
-[Inject functional-core + react-best-practices (if_react condition passes)]
+[Inject configured review criteria (if_react condition passes for React skills)]
 
 [Reviews pass]
 
 [HOOK: after_task]
-[Invoke boy-scout-rule - no issues]
+[Invoke configured refactoring skill - no issues]
 [Check if_ui_changed - YES, .tsx files in diff]
-[Invoke visual-feedback-loop - screenshot, verify UI renders correctly]
-[Invoke ux-visual-evaluation - check visual design quality]
+[Invoke configured UI verification skill - screenshot, verify UI renders correctly]
+[Invoke configured visual evaluation skill - check visual design quality]
 
 [Mark Task 2 complete]
 
