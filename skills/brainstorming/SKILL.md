@@ -11,12 +11,22 @@ Help turn ideas into fully formed designs and specs through natural collaborativ
 
 Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design in small sections (200-300 words), checking after each section whether it looks right so far.
 
-## The Process
+## REQUIRED FIRST STEP: Check Workflow Hooks
 
-**[HOOK: before_design]** Before starting, check for workflow hooks:
-1. Look for `.claude/workflow-hooks.yaml` or `~/.claude/workflow-hooks.yaml`
-2. If `before_design` hooks are defined, invoke each skill where condition passes
-3. Apply guidance from invoked skills to the design process
+**You MUST do this before ANY other action (including asking questions):**
+
+1. Read `~/.claude/workflow-hooks.yaml` (if not found, try `.claude/workflow-hooks.yaml`)
+2. If the file exists, check for `before_design` hooks
+3. For each hook where the condition matches (e.g., `if_ui` for UI work):
+   - Tell the user: "Invoking **[skill-name]** (triggered by `before_design` hook)"
+   - Invoke that skill using the Skill tool
+4. Apply the guidance from invoked skills throughout the design process
+
+**Do NOT skip this step.** Even if you think you know what hooks exist, read the file to confirm.
+
+---
+
+## The Process
 
 **Understanding the idea:**
 - Check out the current project state first (files, docs, recent commits)
@@ -39,10 +49,14 @@ Start by understanding the current project context, then ask questions one at a 
 
 ## After the Design
 
-**[HOOK: after_design]** Before saving the design document:
-1. Check workflow hooks configuration for `after_design` hooks
-2. If hooks are defined, invoke each skill where condition passes
-3. Apply guidance (e.g., create ADRs for architectural decisions)
+**REQUIRED: Before saving the design document, check `after_design` hooks:**
+
+1. Re-read `~/.claude/workflow-hooks.yaml` (or `.claude/workflow-hooks.yaml`)
+2. Check for `after_design` hooks
+3. For each hook where the condition matches:
+   - Tell the user: "Invoking **[skill-name]** (triggered by `after_design` hook)"
+   - Invoke that skill using the Skill tool
+4. Apply guidance (e.g., create ADRs for architectural decisions, build prototypes)
 
 **Documentation:**
 - Write the validated design to `docs/plans/YYYY-MM-DD-<topic>-design.md`

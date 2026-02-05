@@ -35,12 +35,22 @@ digraph when_to_use {
 - Two-stage review after each task: spec compliance first, then code quality
 - Faster iteration (no human-in-loop between tasks)
 
-## The Process
+## REQUIRED FIRST STEP: Check Workflow Hooks
 
-**[HOOK: before_execute]** Before starting execution:
-1. Look for `.claude/workflow-hooks.yaml` or `~/.claude/workflow-hooks.yaml`
-2. If `before_execute` hooks are defined, invoke each skill where condition passes
-3. For `mode: enforce` hooks (e.g., project-quality-setup), block execution until criteria met
+**You MUST do this before dispatching ANY subagents:**
+
+1. Read `~/.claude/workflow-hooks.yaml` (if not found, try `.claude/workflow-hooks.yaml`)
+2. If the file exists, check for `before_execute` hooks
+3. For each hook where the condition matches:
+   - Tell the user: "Invoking **[skill-name]** (triggered by `before_execute` hook, mode: [mode])"
+   - `mode: invoke` (default): Invoke the skill and apply its guidance
+   - `mode: enforce`: Block execution until criteria are met
+
+**Do NOT skip this step.** Example: `project-quality-setup` with `mode: enforce` blocks execution until linting/formatting/CI are configured.
+
+---
+
+## The Process
 
 ```dot
 digraph process {
@@ -96,6 +106,9 @@ digraph process {
 ```
 
 ## Workflow Hooks Detail
+
+**For ALL hooks:** When invoking a skill due to a hook, tell the user:
+"Invoking **[skill-name]** (triggered by `[hook-name]` hook)"
 
 ### [HOOK: before_execute]
 **When:** After reading plan, before first task

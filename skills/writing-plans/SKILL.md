@@ -17,15 +17,22 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Save plans to:** `docs/plans/YYYY-MM-DD-<feature-name>.md`
 
-## Before Planning
+## REQUIRED FIRST STEP: Check Workflow Hooks
 
-**[HOOK: before_plan]** Check for workflow hooks before starting:
-1. Look for `.claude/workflow-hooks.yaml` or `~/.claude/workflow-hooks.yaml`
-2. If `before_plan` hooks are defined, invoke each skill where condition passes
-3. For `mode: check` hooks, verify criteria are met and warn if not
-4. For `mode: enforce` hooks, block planning until criteria are met
+**You MUST do this before writing ANY plan content:**
 
-Example: A `project-quality-setup` hook in check mode would verify linting/formatting/CI are configured before planning implementation.
+1. Read `~/.claude/workflow-hooks.yaml` (if not found, try `.claude/workflow-hooks.yaml`)
+2. If the file exists, check for `before_plan` hooks
+3. For each hook where the condition matches:
+   - Tell the user: "Invoking **[skill-name]** (triggered by `before_plan` hook, mode: [mode])"
+   - `mode: invoke` (default): Invoke the skill and apply its guidance
+   - `mode: check`: Verify criteria are met, warn if not
+   - `mode: enforce`: Block planning until criteria are met
+4. Apply guidance from invoked skills to the planning process
+
+**Do NOT skip this step.** Example: A `project-quality-setup` hook would verify linting/formatting/CI are configured before planning.
+
+---
 
 ## Bite-Sized Task Granularity
 
@@ -106,11 +113,15 @@ git commit -m "feat: add specific feature"
 
 ## Execution Handoff
 
-**[HOOK: after_plan]** After saving the plan, check for workflow hooks:
-1. Check workflow hooks configuration for `after_plan` hooks
-2. If hooks are defined, invoke each skill where condition passes
+**REQUIRED: After saving the plan, check `after_plan` hooks:**
 
-Then offer execution choice:
+1. Re-read `~/.claude/workflow-hooks.yaml` (or `.claude/workflow-hooks.yaml`)
+2. Check for `after_plan` hooks
+3. For each hook where the condition matches:
+   - Tell the user: "Invoking **[skill-name]** (triggered by `after_plan` hook)"
+   - Invoke that skill using the Skill tool
+
+**Then offer execution choice:**
 
 **"Plan complete and saved to `docs/plans/<filename>.md`. Two execution options:**
 
